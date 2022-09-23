@@ -8,7 +8,8 @@ import download from 'downloadjs';
 import TextInput from '../../components/textinput/TextInput'
 
 //Material UI
-import { TextField, Button, Grid } from '@mui/material';
+import { TextField, Grid } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import PrintIcon from '@mui/icons-material/Print';
 //Date Picker
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -20,6 +21,7 @@ function AddBody() {
     const [date, setDate] = useState(new Date())
     const [subject, setSubject] = useState()
     const [body, setBody] = useState()
+    const [loading, setLoading] = useState(false)
 
     //To structure Date
     const getDate = (dateStr) => {
@@ -71,13 +73,14 @@ function AddBody() {
         if (!date || !subject || !body) {
             errorSetter();
         } else {
+            setLoading(true);
             let data = JSON.stringify({ date: getDate(date), day: getDay(date), subject, body });
             (async () => {
                 // POST request using axios with async/await
                 const headers = { 'Content-Type': 'application/json' };
                 const response = await axios.post('https://connect-letterpad.herokuapp.com/api/', data, { headers, responseType: 'blob' });
-                download(response.data, 'letter.pdf');    
-
+                download(response.data, 'letter.pdf');
+                setLoading(false);
             })();
         }
     }
@@ -87,7 +90,7 @@ function AddBody() {
             <h3>Letter Pad</h3>
             <div className='body-form'>
                 <Grid container spacing={2}>
-                    
+
                     <Grid item xs={12}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
@@ -111,7 +114,17 @@ function AddBody() {
                         <TextInput multiline rows="15" label="Letter Body" value={body} setValue={setBody} />
                     </Grid>
                     <Grid item xs={12}>
-                        <Button fullWidth size="large" variant="contained" endIcon={<PrintIcon />} sx={{ letterSpacing: "2px" }} onClick={handlePrintButton} >Print</Button>
+                        {/* <Button fullWidth size="large" variant="contained" endIcon={<PrintIcon />} sx={{ letterSpacing: "2px" }} onClick={handlePrintButton} >Print</Button> */}
+                        <LoadingButton
+                            fullWidth
+                            onClick={handlePrintButton}
+                            endIcon={<PrintIcon />}
+                            loading={loading}
+                            loadingPosition="end"
+                            variant="contained"
+                        >
+                            Print
+                        </LoadingButton>
                     </Grid>
                 </Grid>
             </div>
