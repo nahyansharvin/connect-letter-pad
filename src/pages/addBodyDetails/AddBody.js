@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import './AddBody.css'
 
+import axios from 'axios';
+import download from 'downloadjs';
+
 //Custom Components
 import TextInput from '../../components/textinput/TextInput'
 
@@ -69,14 +72,13 @@ function AddBody() {
             errorSetter();
         } else {
             let data = JSON.stringify({ date: getDate(date), day: getDay(date), subject, body });
-            console.log(data)
-            // const requestOptions = {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: data
-            // };
-            // fetch('http://127.0.0.1:8000/pdf/', requestOptions)
-            //     .then(response => response.json())
+            (async () => {
+                // POST request using axios with async/await
+                const headers = { 'Content-Type': 'application/json' };
+                const response = await axios.post('http://127.0.0.1:8000/api/', data, { headers, responseType: 'blob' });
+                download(response.data, 'letter.pdf');    
+
+            })();
         }
     }
 
@@ -85,6 +87,7 @@ function AddBody() {
             <h3>Letter Pad</h3>
             <div className='body-form'>
                 <Grid container spacing={2}>
+                    
                     <Grid item xs={12}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
