@@ -75,7 +75,7 @@ function AddBody() {
             (async () => {
                 // POST request using axios with async/await
                 const headers = { 'Content-Type': 'application/json' };
-                const response = await axios.post('http://127.0.0.1:8000/api/', data, { headers, responseType: 'blob' });
+                const response = await axios.post('https://connect-letterpad.herokuapp.com/api/', data, { headers, responseType: 'blob' });
                 download(response.data, 'letter.pdf');    
 
             })();
