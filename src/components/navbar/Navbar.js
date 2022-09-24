@@ -1,6 +1,7 @@
 import React from 'react'
 import "./Navbar.css"
 import Logo from './Logo_wide.png'
+import {Outlet} from 'react-router-dom'
 
 function Navbar() {
   return (
@@ -12,6 +13,7 @@ function Navbar() {
         <div className="nav-links">
         </div>
     </nav>
+    <Outlet />
     </>
   )
 }
