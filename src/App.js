@@ -8,7 +8,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navbar />} >
+          <Route path="connect-letter-pad/" element={<Navbar />} >
            <Route index element={<AddBody />} />
           </Route>
         </Routes>
