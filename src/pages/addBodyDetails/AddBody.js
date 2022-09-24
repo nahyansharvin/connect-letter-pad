@@ -103,12 +103,29 @@ function AddBody() {
                 subject,
                 body
             });
-            console.log(data);
             (async () => {
                 // POST request using axios with async/await
                 const headers = { 'Content-Type': 'application/json' };
-                const response = await axios.post('https://connect-letterpad.herokuapp.com/api/', data, { headers, responseType: 'blob' });
-                download(response.data, 'letter.pdf');
+                await axios.post('http://127.0.0.1:8000/api/', data, { headers, responseType: 'blob' })
+                    .then((response) => {
+                        download(response.data, 'letter.pdf');
+                    })
+                    .catch((error) => {
+                        // Error
+                        if (error.response) {
+                            // The request was made and the server responded with a status code that falls out of the range of 2xx
+                            alert("Internal Server Error \nError code: " + error.response.status);
+                        } else if (error.request) {
+                            // The request was made but no response was received
+                            // `error.request` is an instance of XMLHttpRequest in the 
+                            // browser and an instance of http.ClientRequest in node.js
+                            alert("Server did not respond");
+                        } else {
+                            // Something happened in setting up the request that triggered an Error
+                            alert("Something went wrong\n" + error.message);
+                        }
+                        console.log(error.config);
+                    });
                 setLoading(false);
             })();
         }
