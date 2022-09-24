@@ -161,7 +161,7 @@ function AddBody() {
                                 onChange={(newValue) => {
                                     setDate(newValue);
                                 }}
-                                disableFuture
+                                disablePast
                                 renderInput={(params) => <TextField fullWidth id='outlined-basic'
                                     variant='outlined'
                                     margin="none" {...params} />}
