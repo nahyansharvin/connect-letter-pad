@@ -95,6 +95,7 @@ function AddBody() {
             errorSetter();
         } else {
             setLoading(true);
+            // Structure Data
             let data = JSON.stringify({
                 designation: recipient === "Principal" ? "The Principal" : "Head of Department",
                 department,
@@ -103,8 +104,8 @@ function AddBody() {
                 subject,
                 body
             });
+            //Send Data to Server
             (async () => {
-                // POST request using axios with async/await
                 const headers = { 'Content-Type': 'application/json' };
                 await axios.post('https://connect-letterpad.herokuapp.com/api/', data, { headers, responseType: 'blob' })
                     .then((response) => {
@@ -122,7 +123,6 @@ function AddBody() {
                             // Something happened in setting up the request that triggered an Error
                             alert("Something went wrong\n" + error.message);
                         }
-                        console.log(error.config);
                     });
                 setLoading(false);
             })();
