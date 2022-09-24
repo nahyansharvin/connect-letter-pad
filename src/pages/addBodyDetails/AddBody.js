@@ -94,7 +94,7 @@ function AddBody() {
         if (!date || !subject || !body) {
             errorSetter();
         } else {
-            //setLoading(true);
+            setLoading(true);
             let data = JSON.stringify({
                 designation: recipient === "Principal" ? "The Principal" : "Head of Department",
                 department,
