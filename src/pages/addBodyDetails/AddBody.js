@@ -18,26 +18,25 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 //Menu Items
-const recipients = ["Principal", "HOD", "Others"];
+const recipients = ["Principal", "HOD"];
 const departments = [
-    "Computer Science",
-    "Commerce",
-    "BBA",
-    "Biotechnology",
-    "Biochemistry",
-    "Microbiology",
-    "English",
-    "Economics",
-    "Physics & Maths",
-    "B.Voc",
-    "West Asian Studies",
+    "Dept. of Computer Science",
+    "Dept. of Commerce",
+    "Dept. of BBA",
+    "Dept. of Biotechnology",
+    "Dept. of Biochemistry",
+    "Dept. of Microbiology",
+    "Dept. of English",
+    "Dept. of Economics",
+    "Dept. of Maths & Physics",
+    "Dept. of B.Voc",
+    "Dept. of West Asian Studies",
 ]
 
 function AddBody() {
     //States
     const [recipient, setRecipient] = useState("Principal")
-    const [department, setDepartment] = useState()
-    const [toAddress, setToAddress] = useState()
+    const [department, setDepartment] = useState("Dept. of Computer Science")
     const [date, setDate] = useState(new Date())
     const [subject, setSubject] = useState()
     const [body, setBody] = useState()
@@ -48,6 +47,8 @@ function AddBody() {
         const date = new Date(dateStr);
         return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
     };
+
+
     //To get Day from Date
     const getDay = (dateStr) => {
         const date = new Date(dateStr);
@@ -93,8 +94,16 @@ function AddBody() {
         if (!date || !subject || !body) {
             errorSetter();
         } else {
-            setLoading(true);
-            let data = JSON.stringify({ date: getDate(date), day: getDay(date), subject, body });
+            //setLoading(true);
+            let data = JSON.stringify({
+                designation: recipient === "Principal" ? "The Principal" : "Head of Department",
+                department,
+                date: getDate(date),
+                day: getDay(date),
+                subject,
+                body
+            });
+            console.log(data);
             (async () => {
                 // POST request using axios with async/await
                 const headers = { 'Content-Type': 'application/json' };
@@ -126,11 +135,6 @@ function AddBody() {
                                 dropdownValue={department}
                                 setDropdownValue={setDepartment}
                             />
-                        </Grid>
-                    )}
-                    {recipient === "Others" && (
-                        <Grid item xs={12}>
-                            <TextInput multiline rows="2" label="To Adress" value={toAddress} setValue={setToAddress} />
                         </Grid>
                     )}
                     <Grid item xs={12}>
