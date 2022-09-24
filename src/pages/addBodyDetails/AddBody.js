@@ -6,6 +6,7 @@ import download from 'downloadjs';
 
 //Custom Components
 import TextInput from '../../components/textinput/TextInput'
+import SelectInput from '../../components/textinput/SelectInput'
 
 //Material UI
 import { TextField, Grid } from '@mui/material';
@@ -16,8 +17,27 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
+//Menu Items
+const recipients = ["Principal", "HOD", "Others"];
+const departments = [
+    "Computer Science",
+    "Commerce",
+    "BBA",
+    "Biotechnology",
+    "Biochemistry",
+    "Microbiology",
+    "English",
+    "Economics",
+    "Physics & Maths",
+    "B.Voc",
+    "West Asian Studies",
+]
+
 function AddBody() {
     //States
+    const [recipient, setRecipient] = useState("Principal")
+    const [department, setDepartment] = useState()
+    const [toAddress, setToAddress] = useState()
     const [date, setDate] = useState(new Date())
     const [subject, setSubject] = useState()
     const [body, setBody] = useState()
@@ -90,7 +110,29 @@ function AddBody() {
             <h3>Letter Pad</h3>
             <div className='body-form'>
                 <Grid container spacing={2}>
-
+                    <Grid item xs={12}>
+                        <SelectInput
+                            label="Recipient of letter"
+                            menuItems={recipients}
+                            dropdownValue={recipient}
+                            setDropdownValue={setRecipient}
+                        />
+                    </Grid>
+                    {recipient === "HOD" && (
+                        <Grid item xs={12}>
+                            <SelectInput
+                                label="Department"
+                                menuItems={departments}
+                                dropdownValue={department}
+                                setDropdownValue={setDepartment}
+                            />
+                        </Grid>
+                    )}
+                    {recipient === "Others" && (
+                        <Grid item xs={12}>
+                            <TextInput multiline rows="2" label="To Adress" value={toAddress} setValue={setToAddress} />
+                        </Grid>
+                    )}
                     <Grid item xs={12}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
@@ -111,10 +153,9 @@ function AddBody() {
                         <TextInput label="Subject" value={subject} setValue={setSubject} />
                     </Grid>
                     <Grid item xs={12}>
-                        <TextInput multiline rows="15" label="Letter Body" value={body} setValue={setBody} />
+                        <TextInput multiline rows="12" label="Letter Body" value={body} setValue={setBody} />
                     </Grid>
                     <Grid item xs={12}>
-                        {/* <Button fullWidth size="large" variant="contained" endIcon={<PrintIcon />} sx={{ letterSpacing: "2px" }} onClick={handlePrintButton} >Print</Button> */}
                         <LoadingButton
                             fullWidth
                             onClick={handlePrintButton}
