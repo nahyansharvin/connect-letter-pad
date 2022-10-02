@@ -18,7 +18,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 //Menu Items
-const recipients = ["Principal", "HOD"];
+const recipients = ["Principal", "HOD", "Others"];
 const departments = [
     "Dept. of Computer Science",
     "Dept. of Commerce",
@@ -37,6 +37,7 @@ function AddBody() {
     //States
     const [recipient, setRecipient] = useState("Principal")
     const [department, setDepartment] = useState("Dept. of Computer Science")
+    const [toAddress, setToAddress] = useState()
     const [date, setDate] = useState(new Date())
     const [subject, setSubject] = useState()
     const [body, setBody] = useState()
@@ -86,28 +87,31 @@ function AddBody() {
     //Ser error in empty fields
     const errorSetter = () => {
         if (!date) setDate("")
+        if (!toAddress) setToAddress("")
         if (!subject) setSubject("")
         if (!body) setBody("")
     }
 
     const handlePrintButton = () => {
-        if (!date || !subject || !body) {
+        if (!date || !subject || !body || (recipient === "Others" && !toAddress)) {
             errorSetter();
         } else {
             setLoading(true);
             // Structure Data
             let data = JSON.stringify({
+                recipient,
                 designation: recipient === "Principal" ? "The Principal" : "Head of Department",
                 department,
+                toAddress,
                 date: getDate(date),
                 day: getDay(date),
                 subject,
                 body
             });
-            //Send Data to Server
+            // Send Data to Server
             (async () => {
                 const headers = { 'Content-Type': 'application/json' };
-                await axios.post('https://connect-letterpad.herokuapp.com/api/', data, { headers, responseType: 'blob' })
+                await axios.post(' http://127.0.0.1:8000/api/', data, { headers, responseType: 'blob' })
                     .then((response) => {
                         download(response.data, 'letter.pdf');
                     })
@@ -152,6 +156,17 @@ function AddBody() {
                             />
                         </Grid>
                     )}
+                    {recipient === "Others" && (
+                        <Grid item xs={12}>
+                            <TextInput
+                                multiline
+                                rows="3"
+                                label="To Address"
+                                value={toAddress}
+                                setValue={setToAddress}
+                            />
+                        </Grid>
+                    )}
                     <Grid item xs={12}>
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
                             <DatePicker
@@ -169,7 +184,7 @@ function AddBody() {
                         </LocalizationProvider>
                     </Grid>
                     <Grid item xs={12}>
-                        <TextInput label="Subject" value={subject} setValue={setSubject} />
+                        <TextInput multiline label="Subject" value={subject} setValue={setSubject} />
                     </Grid>
                     <Grid item xs={12}>
                         <TextInput multiline rows="12" label="Letter Body" value={body} setValue={setBody} />
