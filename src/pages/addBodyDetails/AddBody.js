@@ -32,6 +32,7 @@ const departments = [
     "Dept. of B.Voc",
     "Dept. of West Asian Studies",
 ]
+const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 function AddBody() {
     //States
@@ -53,35 +54,7 @@ function AddBody() {
     //To get Day from Date
     const getDay = (dateStr) => {
         const date = new Date(dateStr);
-        let dayint = `${date.getDay()}`;
-        let day = "";
-        switch (dayint) {
-            case "0":
-                day = "Sunday";
-                break;
-            case "1":
-                day = "Monday";
-                break;
-            case "2":
-                day = "Tuesday";
-                break;
-            case "3":
-                day = "Wednesday";
-                break;
-            case "4":
-                day = "Thursday";
-                break;
-            case "5":
-                day = "Friday";
-                break;
-            case "6":
-                day = "Saturday";
-                break;
-            default:
-                day = "Invalid Day";
-                break;
-        }
-        return day;
+        return days[date.getDay()];
     };
 
     //Ser error in empty fields
@@ -96,7 +69,7 @@ function AddBody() {
         if (!date || !subject || !body || (recipient === "Others" && !toAddress)) {
             errorSetter();
         } else {
-            setLoading(true);
+            // setLoading(true);
             // Structure Data
             let data = JSON.stringify({
                 recipient,
@@ -108,28 +81,29 @@ function AddBody() {
                 subject,
                 body
             });
+            console.log(data);
             // Send Data to Server
-            (async () => {
-                const headers = { 'Content-Type': 'application/json' };
-                await axios.post('https://connect-letterpad.herokuapp.com/api/', data, { headers, responseType: 'blob' })
-                    .then((response) => {
-                        download(response.data, 'letter.pdf');
-                    })
-                    .catch((error) => {
-                        // Error
-                        if (error.response) {
-                            // The request was made and the server responded with a status code that falls out of the range of 2xx
-                            alert("Internal Server Error \nError code: " + error.response.status);
-                        } else if (error.request) {
-                            // The request was made but no response was received
-                            alert("Server did not respond");
-                        } else {
-                            // Something happened in setting up the request that triggered an Error
-                            alert("Something went wrong\n" + error.message);
-                        }
-                    });
-                setLoading(false);
-            })();
+            // (async () => {
+            //     const headers = { 'Content-Type': 'application/json' };
+            //     await axios.post('https://connect-letterpad.herokuapp.com/api/', data, { headers, responseType: 'blob' })
+            //         .then((response) => {
+            //             download(response.data, 'letter.pdf');
+            //         })
+            //         .catch((error) => {
+            //             // Error
+            //             if (error.response) {
+            //                 // The request was made and the server responded with a status code that falls out of the range of 2xx
+            //                 alert("Internal Server Error \nError code: " + error.response.status);
+            //             } else if (error.request) {
+            //                 // The request was made but no response was received
+            //                 alert("Server did not respond");
+            //             } else {
+            //                 // Something happened in setting up the request that triggered an Error
+            //                 alert("Something went wrong\n" + error.message);
+            //             }
+            //         });
+            //     setLoading(false);
+            // })();
         }
     }
 
