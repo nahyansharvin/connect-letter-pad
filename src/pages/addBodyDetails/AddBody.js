@@ -83,26 +83,18 @@ function AddBody() {
             });
             // Send Data to Server
             (async () => {
-                const headers = { 'Content-Type': 'application/json' };
-                await axios.post('https://connect-letterpad.herokuapp.com/api/', data, { headers, responseType: 'blob' })
-                    .then((response) => {
-                        download(response.data, 'letter.pdf');
-                    })
-                    .catch((error) => {
-                        // Error
-                        if (error.response) {
-                            // The request was made and the server responded with a status code that falls out of the range of 2xx
-                            alert("Internal Server Error \nError code: " + error.response.status);
-                        } else if (error.request) {
-                            // The request was made but no response was received
-                            alert("Server did not respond");
-                        } else {
-                            // Something happened in setting up the request that triggered an Error
-                            alert("Something went wrong\n" + error.message);
-                        }
-                    });
+                try {
+                    const headers = { 'Content-Type': 'application/json' };
+                    const response = await axios.post('https://connect-letterpad.herokuapp.com/api/', data, { headers, responseType: 'blob' })
+                    download(response.data, 'letter.pdf');
+                } catch (error) {
+                    alert("Something went wrong\n" + error.message);
+                }
                 setLoading(false);
             })();
+
+
+
         }
     }
 
